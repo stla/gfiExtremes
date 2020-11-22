@@ -155,26 +155,13 @@ gfigpd2 <- function(
   if(nchains == 1L){
     out <- coda::mcmc(chain, start = burnin+1L, thin = thin)
   }else{
-    out <- 
-      coda::mcmc.list(lapply(chains, coda::mcmc, start = burnin+1L, thin = thin))
+    out <- coda::mcmc.list(
+      lapply(chains, coda::mcmc, start = burnin+1L, thin = thin)
+    )
   }
   
   attr(out, "beta") <- beta
   attr(out, "threshold") <- thresholdEstimate
   
   return(out)
-
-  # # Indictor for the acceptance rate. // pas besoin avec coda::rejectionRate
-  # ii <- integer(nrow(x.t))
-  # for (i in 1L:(nrow(x.t) - 1L)) {
-  #   if (x.t[i, 4L] != x.t[i + 1L, 4L]) {
-  #     ii[i + 1L] <- 1L
-  #   }
-  # }
-  # acceptance.rate <- mean(ii)
-  # cat("acceptance rate: ", acceptance.rate)
-  # 
-  # x.t[, 4L:(3L + length(beta))] <- x.t[, 4L:(3L + length(beta))] + X[1L]
-  # 
-  # return(x.t)
 }

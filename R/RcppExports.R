@@ -5,7 +5,7 @@ MCMCchain <- function(X, beta, g, s, a, i, p1, p2, lambda1, lambda2, sd_g, sd_s,
     .Call('_gfiExtremes_MCMCchain', PACKAGE = 'gfiExtremes', X, beta, g, s, a, i, p1, p2, lambda1, lambda2, sd_g, sd_s, niter, nburnin, Jnumb, seed)
 }
 
-MCMCchainArma <- function(X, beta, g, s, a, prob, sd_g, sd_s, niter, Jnumb, seed) {
-    .Call('_gfiExtremes_MCMCchainArma', PACKAGE = 'gfiExtremes', X, beta, g, s, a, prob, sd_g, sd_s, niter, Jnumb, seed)
+MCMCchainArma <- function(Xfull, beta, g, s, a, prob, sd_g, sd_s, niter, Jnumb, seed) {
+    .Call('_gfiExtremes_MCMCchainArma', PACKAGE = 'gfiExtremes', Xfull, beta, g, s, a, prob, sd_g, sd_s, niter, Jnumb, seed)
 }
 

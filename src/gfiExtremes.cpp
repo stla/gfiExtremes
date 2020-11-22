@@ -102,12 +102,10 @@ double Jacobian(const double g,
 
 double JacobianArma(const double g,
                     const double s,
-                    const double a,
                     const size_t Jnumb,
-                    const arma::vec& Xo,
+                    const arma::vec& X,
                     const int n,
                     std::default_random_engine& generator) {
-  const arma::vec X = Xo - a;
   arma::mat Xchoose2(Jnumb, 2);
   if(n >= 250) {
     for(size_t i = 0; i < Jnumb; i++) {
@@ -142,7 +140,7 @@ double JacobianArma(const double g,
       const arma::vec A = g / s * X;
       const arma::mat XiXj = X * ((1 + A) % log1p(A)).t();
       const arma::mat UpperTriOnes = arma::trimatu(arma::ones(n, n));
-      Jmean = 2 * arma::accu(abs(XiXj - XiXj.t()) % UpperTriOnes) /
+      Jmean = 2.0 * arma::accu(abs(XiXj - XiXj.t()) % UpperTriOnes) /
               (g * g * n * (n - 1));
     }
   }
@@ -177,23 +175,20 @@ const double log_gpd_dens(const double g,
 //~ log-density of fiducial distribution of (gamma,sigma) ------------------ ~//
 const double log_gpd_densArma(const double g,
                               const double s,
-                              const double a,
-                              const arma::vec& Xo,
+                              const arma::vec& X,
+                              const int n,
                               const size_t Jnumb,
                               std::default_random_engine& generator) {
   double log_density;
-  const arma::vec X = Xo.elem(arma::find(Xo > a));
-  const int n = X.size();
-  const double Max = arma::max(
-      X - a);  // tout ça me semble fixe et c'est calculé à chaque itération !
+  const double Max = arma::max(X);
 
   if(s > 0 && g > (-s / Max)) {
-    const double J = JacobianArma(g, s, a, Jnumb, X, n, generator);
+    const double J = JacobianArma(g, s, Jnumb, X, n, generator);
 
     if(g == 0.0) {
-      log_density = arma::accu(a - X) / s + log(J) - n * log(s);
+      log_density = -arma::accu(X) / s + log(J) - n * log(s);
     } else {
-      log_density = (-1 / g - 1) * arma::accu(log1p(g * (X - a) / s)) + log(J) -
+      log_density = (-1 / g - 1) * arma::accu(log1p(g * X / s)) + log(J) -
                     n * log(s);
     }
   } else {
@@ -277,17 +272,17 @@ std::array<double, 3> MCMCnewpoint(const double g,
 
 arma::rowvec2 MCMCnewpointArma(const double g,
                                const double s,
-                               const double a,
                                const double sd_g,
                                const double sd_s,
                                const arma::vec& X,
+                               const int n,
                                const size_t Jnumb,
                                std::default_random_engine& generator) {
   const double g_star = g + sd_g * cauchy(generator);
   const double s_star = s + sd_s * cauchy(generator);
   const double MHratio =
-      exp(log_gpd_densArma(g_star, s_star, a, X, Jnumb, generator) -
-          log_gpd_densArma(g, s, a, X, Jnumb, generator));
+      exp(log_gpd_densArma(g_star, s_star, X, n, Jnumb, generator) -
+          log_gpd_densArma(g, s, X, n, Jnumb, generator));
   arma::rowvec2 newpoint;
   if(!std::isnan(MHratio) && !std::isinf(MHratio) &&
      uniform(generator) < MHratio) {
@@ -383,7 +378,7 @@ Rcpp::NumericMatrix MCMCchain(Rcpp::NumericVector X,
 }
 
 // [[Rcpp::export]]
-arma::mat MCMCchainArma(const arma::vec& X,
+arma::mat MCMCchainArma(const arma::vec& Xfull,
                         const arma::rowvec& beta,
                         const double g,
                         const double s,
@@ -398,9 +393,11 @@ arma::mat MCMCchainArma(const arma::vec& X,
   arma::mat xt(niter, 2 + beta.size());
   arma::rowvec2 gs = {g, s};
   xt.row(0) = arma::join_rows(gs, BetaQuantileArma(g, s, a, prob, beta));
+  const arma::vec X = Xfull.elem(arma::find(Xfull > a)) - a;
+  const int n = X.size();
   for(size_t j = 0; j < niter - 1; j++) {
-    arma::rowvec2 newpoint = MCMCnewpointArma(xt.at(j, 0), xt.at(j, 1), a, sd_g,
-                                              sd_s, X, Jnumb, generator);
+    arma::rowvec2 newpoint = MCMCnewpointArma(xt.at(j, 0), xt.at(j, 1), sd_g,
+                                              sd_s, X, n, Jnumb, generator);
     xt.row(j + 1) = arma::join_rows(
         newpoint,
         BetaQuantileArma(newpoint.at(0), newpoint.at(1), a, prob, beta));

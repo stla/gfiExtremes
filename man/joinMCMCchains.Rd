@@ -7,7 +7,8 @@
 joinMCMCchains(gfi)
 }
 \arguments{
-\item{gfi}{an output of \code{\link{gfigpd}} containing more than one chain}
+\item{gfi}{an output of \code{\link{gfigpd1}} or \code{\link{gfigpd2}} 
+containing more than one chain}
 }
 \value{
 A \code{mcmc} object.

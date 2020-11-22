@@ -1,7 +1,7 @@
 #' Threshold estimate
 #' @description Returns the estimate of the threshold.
 #'
-#' @param gfi an output of \code{\link{gfigpd}}
+#' @param gfi an output of \code{\link{gfigpd2}}
 #'
 #' @return The estimated threshold.
 #' @export
@@ -12,7 +12,8 @@ thresholdEstimate <- function(gfi){
 #' Join MCMC chains
 #' @description Joins multiple MCMC chains into a single chain.
 #'
-#' @param gfi an output of \code{\link{gfigpd}} containing more than one chain
+#' @param gfi an output of \code{\link{gfigpd1}} or \code{\link{gfigpd2}} 
+#'   containing more than one chain
 #'
 #' @return A \code{mcmc} object.
 #' @export

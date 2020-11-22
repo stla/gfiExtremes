@@ -7,7 +7,7 @@
 thresholdEstimate(gfi)
 }
 \arguments{
-\item{gfi}{an output of \code{\link{gfigpd}}}
+\item{gfi}{an output of \code{\link{gfigpd2}}}
 }
 \value{
 The estimated threshold.

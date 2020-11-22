@@ -22,7 +22,8 @@ gfigpd2(
   thin = 6L,
   nchains = nthreads,
   nthreads = parallel::detectCores(),
-  seeds = NULL
+  seeds = NULL,
+  allParameters = FALSE
 )
 }
 \arguments{
@@ -69,6 +70,9 @@ is skipped)}
 
 \item{seeds}{the seeds used for the MCMC sampler; one seed per chain, or 
 \code{NULL} to use random seeds}
+
+\item{allParameters}{logical, whether to return the MCMC chains of all 
+parameters (pretty useless) or only the ones of the quantiles}
 }
 \value{
 An object of class \code{\link[coda:mcmc]{mcmc}} if \code{nchains=1}, 

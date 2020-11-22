@@ -28,6 +28,8 @@
 #' @param nthreads number of threads to run the chains in parallel
 #' @param seeds the seeds used for the MCMC sampler; one seed per chain, or 
 #'   \code{NULL} to use random seeds
+#' @param allParameters logical, whether to return the MCMC chains of all 
+#'   parameters (pretty useless) or only the ones of the quantiles
 #'
 #' @return An object of class \code{\link[coda:mcmc]{mcmc}} if \code{nchains=1}, 
 #'   otherwise an object of class \code{\link[coda:mcmc.list]{mcmc.list}}.
@@ -60,7 +62,8 @@ gfigpd2 <- function(
   gamma.init = NA, sigma.init = NA, sd.gamma = NA, sd.sigma = NA, 
   p1 = 0.9, p2 = 0.5, lambda1 = 2, lambda2 = 10, Jnumb = 50L, 
   iter = 10000L, burnin = 2000L, thin = 6L,
-  nchains = nthreads, nthreads = parallel::detectCores(), seeds = NULL) {
+  nchains = nthreads, nthreads = parallel::detectCores(), seeds = NULL, 
+  allParameters = FALSE) {
   
   stopifnot(thin >= 1L, nchains >= 1L, nthreads >= 1L)
   nthreads <- min(nthreads, nchains)
@@ -115,6 +118,9 @@ gfigpd2 <- function(
     colnames(chain) <- params
     chain[, 4L:(3L + length(beta))] <- chain[, 4L:(3L + length(beta))] + X[1L]
     thresholdEstimate <- X[median(chain[,"index"])]
+    if(!allParameters){
+      chain <- chain[, -(1L:3L)]
+    }
   }else{
     if(nthreads == 1L){
       chains <- vector("list", nchains)
@@ -155,6 +161,11 @@ gfigpd2 <- function(
       chain[, "index"]
     }, FUN.VALUE = numeric(iter)))
     thresholdEstimate <- X[median(index)]
+    if(!allParameters){
+      chains <- lapply(chains, function(chain){
+        chain[, -(1L:3L)]
+      })
+    }
   }
   
   if(nchains == 1L){

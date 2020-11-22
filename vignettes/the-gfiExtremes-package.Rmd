@@ -1,0 +1,28 @@
+---
+title: "The 'gfiExtremes' package"
+output: 
+  rmarkdown::html_vignette:
+    css: vignette.css
+vignette: >
+  %\VignetteIndexEntry{The 'gfiExtremes' package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE}
+library(gfiExtremes)
+```
+
+
+## The model with a known threshold
+
+
+## The model with an unknown threshold
+

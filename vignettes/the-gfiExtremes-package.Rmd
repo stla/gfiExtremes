@@ -14,7 +14,9 @@ editor_options:
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 5
 )
 ```
 
@@ -39,10 +41,21 @@ For example, assume that $X$ follows the $GP(\mu,\gamma,\sigma)$ distribution
 
 ```{r gfigpd1}
 set.seed(666L)
-X <- rgpareto(200L, mu = 10, gamma = 0.8, sigma = 2)
-gf <- gfigpd1(X, beta = c(0.99, 0.995, 0.999), threshold = 10, iter = 10000L)
+X <- rgpareto(200L, mu = 10, gamma = 0.3, sigma = 2)
+gf1 <- gfigpd1(X, beta = c(0.99, 0.995, 0.999), threshold = 10, iter = 10000L)
 ```
 
+The output of `gfigpd1` is a R object ready for analysis with the 'coda' 
+package. In particular, it has a `summary` method.
+
+```{r summary_gfigpd1}
+summary(gf1)
+# compare with the true quantiles:
+qgpareto(c(0.99, 0.995, 0.999), mu = 10, gamma = 0.3, sigma = 2)
+```
+
+Every parameter is very well estimated by the median of its fiducial 
+distribution.
 
 
 ## The model with an unknown threshold

@@ -1,3 +1,19 @@
+f <- function(n){
+  i1 <- sample.int(n, 1) - 1
+  i2 <- sample.int(n-1, 1) - 1
+  if(i2 == i1){ 
+    i2 = ifelse(i1 == n-2, n-1, n-2)
+  }
+  return(c(i1, i2))
+}
+
+plot(
+  table(
+    replicate(400000, paste0(f(5), collapse = "-"))
+  )
+)
+
+############################################################################
 f1 <- function(n){
   i1 <- sample.int(n, 1)
   i2 <- sample.int(n-1, 1)

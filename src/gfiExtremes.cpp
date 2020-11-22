@@ -30,7 +30,7 @@ const std::array<int, 2> choose2(const int n,
   const int i1 = sampler1(generator);
   int i2 = sampler2(generator);
   if(i2 == i1) {
-    i2 = i1 == n - 2 ? n - 1 : n - 2;
+    i2 = n - 1;
   }
   return {i1, i2};
 }

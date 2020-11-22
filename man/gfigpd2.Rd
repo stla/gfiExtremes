@@ -79,8 +79,8 @@ Runs the MCMC sampler of the fiducial distribution for the
   generalized Pareto model with unknown threshold.
 }
 \examples{
-set.seed(666L)
-X <- rgamma(500L, shape = 10, rate = 1)
+set.seed(31415L)
+X <- rgamma(350L, shape = 10, rate = 1)
 gf <- gfigpd2(X, beta = c(0.98, 0.99), iter = 3000L)
 summary(gf)
 qgamma(c(0.98, 0.99), shape = 10, rate = 1)

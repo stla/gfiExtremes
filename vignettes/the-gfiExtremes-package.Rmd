@@ -5,8 +5,10 @@ output:
     css: vignette.css
 vignette: >
   %\VignetteIndexEntry{The 'gfiExtremes' package}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r, include = FALSE}
@@ -22,6 +24,25 @@ library(gfiExtremes)
 
 
 ## The model with a known threshold
+
+When the threshold $\mu$ is known, it is assumed that the data are independent 
+realizations of a random variable $X$ which follows a generalized Pareto 
+distribution $GP(\mu,\gamma,\sigma)$ conditionally to $X \geqslant \mu$. On the 
+event $X < \mu$, no distributional assumption is made.
+
+Then the algorithm performed by the `gfigpd1` function produces some simulations
+of the fiducial distributions of $\gamma$, $\sigma$ and of the 
+$(100\beta\%)$-quantiles of $X$ at the requested values of $\beta$.
+
+For example, assume that $X$ follows the $GP(\mu,\gamma,\sigma)$ distribution 
+(so $X < \mu$ never happens). 
+
+```{r gfigpd1}
+set.seed(666L)
+X <- rgpareto(200L, mu = 10, gamma = 0.8, sigma = 2)
+gf <- gfigpd1(X, beta = c(0.99, 0.995, 0.999), threshold = 10, iter = 10000L)
+```
+
 
 
 ## The model with an unknown threshold

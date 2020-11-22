@@ -1,4 +1,6 @@
-#' Title
+#' Fiducial inference for the generalized Pareto model with known threshold
+#' @description Runs the MCMC sampler of the fiducial distribution for the 
+#'   generalized Pareto model with known threshold.
 #'
 #' @param X numeric vector of data
 #' @param beta vector of probabilities corresponding to the quantiles to be 
@@ -66,8 +68,8 @@ gfigpd1 <- function(
     if(is.na(gamma.init)) gamma.init <- mle.fit$mle[2L]
     if(is.na(sigma.init)) sigma.init <- mle.fit$mle[1L]
   }
-  if(is.na(sd.gamma)) sd.gamma <- .3 / log(n, 20)
-  if(is.na(sd.sigma)) sd.sigma <- sigma.init * .3 / log(n, 20)
+  if(is.na(sd.gamma)) sd.gamma <- 0.3 / log(n, 20)
+  if(is.na(sd.sigma)) sd.sigma <- sigma.init * 0.3 / log(n, 20)
   
   skip.number <- thin - 1L
   number.iterations <- (skip.number + 1L) * iter + burnin

@@ -2,7 +2,7 @@
 % Please edit documentation in R/main1.R
 \name{gfigpd1}
 \alias{gfigpd1}
-\title{Title}
+\title{Fiducial inference for the generalized Pareto model with known threshold}
 \usage{
 gfigpd1(
   X,
@@ -59,7 +59,8 @@ An object of class \code{\link[coda:mcmc]{mcmc}} if \code{nchains=1},
   otherwise an object of class \code{\link[coda:mcmc.list]{mcmc.list}}.
 }
 \description{
-Title
+Runs the MCMC sampler of the fiducial distribution for the 
+  generalized Pareto model with known threshold.
 }
 \examples{
 set.seed(666L)

@@ -1,4 +1,6 @@
-#' Title
+#' Fiducial inference for the generalized Pareto model with unknown threshold
+#' @description Runs the MCMC sampler of the fiducial distribution for the 
+#'   generalized Pareto model with unknown threshold.
 #'
 #' @param X numeric vector of data
 #' @param beta vector of probabilities corresponding to the quantiles to be 

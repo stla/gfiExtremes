@@ -83,11 +83,18 @@ Let's assume for example that $X$ follows a log-normal distribution:
 
 ```{r gfigpd2}
 set.seed(666L)
-X <- rlnorm(200L, meanlog = 1)
-gf2 <- gfigpd2(X, beta = c(0.99, 0.995, 0.999), iter = 10000L)
+X <- rlnorm(400L, meanlog = 1)
+gf2 <- gfigpd2(X, beta = c(0.99, 0.995, 0.999), iter = 10000L, burnin = 10000L)
 summary(gf2)
 # compare with the true quantiles:
 qlnorm(c(0.99, 0.995, 0.999), meanlog = 1)
 ```
 
+As you can see, the inference on the quantiles is good.
+
+## A real dataset
+
+```{r rain}
+data("rain", package = "ismev")
+```
 

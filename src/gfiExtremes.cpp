@@ -103,8 +103,8 @@ double Jacobian(const double g,
 double JacobianArma1(const double g,
                      const double s,
                      const arma::vec& X,
-                     const int n) {
-  const arma::mat UpperTriOnes = arma::trimatu(arma::ones(n, n));
+                     const int n,
+                     const arma::mat& UpperTriOnes) {
   double Jmean;
   if(g == 0.0) {
     const arma::mat XiXj = (X % X) * X.t();
@@ -179,14 +179,14 @@ const double log_gpd_densArma(const double g,
                               const arma::vec& X,
                               const int n,
                               const size_t Jnumb,
-                              std::default_random_engine& generator) {
+                              std::default_random_engine& generator,
+                              const arma::mat& UpperTriOnes) {
   double log_density;
   const double Max = arma::max(X);
 
   if(s > 0 && g > (-s / Max)) {
-    const double J = n < 250 ? 
-      JacobianArma1(g, s, X, n) : 
-      JacobianArma2(g, s, Jnumb, X, n, generator);
+    const double J = n < 250 ? JacobianArma1(g, s, X, n, UpperTriOnes)
+                             : JacobianArma2(g, s, Jnumb, X, n, generator);
 
     if(g == 0.0) {
       log_density = -arma::accu(X) / s + log(J) - n * log(s);
@@ -280,12 +280,13 @@ arma::rowvec2 MCMCnewpointArma(const double g,
                                const arma::vec& X,
                                const int n,
                                const size_t Jnumb,
-                               std::default_random_engine& generator) {
+                               std::default_random_engine& generator,
+                               const arma::mat& UpperTriOnes) {
   const double g_star = g + sd_g * cauchy(generator);
   const double s_star = s + sd_s * cauchy(generator);
-  const double MHratio =
-      exp(log_gpd_densArma(g_star, s_star, X, n, Jnumb, generator) -
-          log_gpd_densArma(g, s, X, n, Jnumb, generator));
+  const double MHratio = exp(
+      log_gpd_densArma(g_star, s_star, X, n, Jnumb, generator, UpperTriOnes) -
+      log_gpd_densArma(g, s, X, n, Jnumb, generator, UpperTriOnes));
   arma::rowvec2 newpoint;
   if(!std::isnan(MHratio) && !std::isinf(MHratio) &&
      uniform(generator) < MHratio) {
@@ -398,9 +399,11 @@ arma::mat MCMCchainArma(const arma::vec& Xfull,
   xt.row(0) = arma::join_rows(gs, BetaQuantileArma(g, s, a, prob, beta));
   const arma::vec X = Xfull.elem(arma::find(Xfull > a)) - a;
   const int n = X.size();
+  const arma::mat UpperTriOnes = arma::trimatu(arma::ones(n, n));
   for(size_t j = 0; j < niter - 1; j++) {
-    arma::rowvec2 newpoint = MCMCnewpointArma(xt.at(j, 0), xt.at(j, 1), sd_g,
-                                              sd_s, X, n, Jnumb, generator);
+    arma::rowvec2 newpoint =
+        MCMCnewpointArma(xt.at(j, 0), xt.at(j, 1), sd_g, sd_s, X, n, Jnumb,
+                         generator, UpperTriOnes);
     xt.row(j + 1) = arma::join_rows(
         newpoint,
         BetaQuantileArma(newpoint.at(0), newpoint.at(1), a, prob, beta));

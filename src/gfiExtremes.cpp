@@ -100,51 +100,50 @@ double Jacobian(const double g,
   return Jmean;
 }
 
-double JacobianArma(const double g,
-                    const double s,
-                    const size_t Jnumb,
-                    const arma::vec& X,
-                    const int n,
-                    std::default_random_engine& generator) {
-  arma::mat Xchoose2(Jnumb, 2);
-  if(n >= 250) {
-    for(size_t i = 0; i < Jnumb; i++) {
-      const std::array<int, 2> indices = choose2(n, generator);
-      const arma::rowvec2 row_i = {X.at(indices[0]), X.at(indices[1])};
-      Xchoose2.row(i) = row_i;
-    }
-  }
-
-  // si n < 250 sortir les objets de la boucle! (2 fonctions selon n<250)
-  
+double JacobianArma1(const double g,
+                     const double s,
+                     const arma::vec& X,
+                     const int n) {
+  const arma::mat UpperTriOnes = arma::trimatu(arma::ones(n, n));
   double Jmean;
   if(g == 0.0) {
-    if(n >= 250) {
-      const arma::vec Jvec = Xchoose2.col(0) % Xchoose2.col(1) %
-                             (Xchoose2.col(0) - Xchoose2.col(1)) /
-                             (2.0 * s * s);
-      Jmean = arma::mean(abs(Jvec));
-    } else {
-      const arma::mat XiXj = (X % X) * X.t();
-      const arma::mat UpperTriOnes = arma::trimatu(arma::ones(n, n));
-      Jmean = arma::accu(abs(XiXj - XiXj.t()) % UpperTriOnes) /
-              (s * s * n * (n - 1));
-    }
+    const arma::mat XiXj = (X % X) * X.t();
+    Jmean =
+        arma::accu(abs(XiXj - XiXj.t()) % UpperTriOnes) / (s * s * n * (n - 1));
   } else {
-    if(n >= 250) {
-      const arma::mat A = g / s * Xchoose2;
-      const arma::vec Jvec =
-          (Xchoose2.col(0) % (1 + A.col(1)) % log1p(A.col(1)) -
-           Xchoose2.col(1) % (1 + A.col(0)) % log1p(A.col(0))) /
-          g / g;
-      Jmean = arma::mean(abs(Jvec));
-    } else {
-      const arma::vec A = g / s * X;
-      const arma::mat XiXj = X * ((1 + A) % log1p(A)).t();
-      const arma::mat UpperTriOnes = arma::trimatu(arma::ones(n, n));
-      Jmean = 2.0 * arma::accu(abs(XiXj - XiXj.t()) % UpperTriOnes) /
-              (g * g * n * (n - 1));
-    }
+    const arma::vec A = g / s * X;
+    const arma::mat XiXj = X * ((1 + A) % log1p(A)).t();
+    Jmean = 2.0 * arma::accu(abs(XiXj - XiXj.t()) % UpperTriOnes) /
+            (g * g * n * (n - 1));
+  }
+  return Jmean;
+}
+
+double JacobianArma2(const double g,
+                     const double s,
+                     const size_t Jnumb,
+                     const arma::vec& X,
+                     const int n,
+                     std::default_random_engine& generator) {
+  arma::mat Xchoose2(Jnumb, 2);
+  for(size_t i = 0; i < Jnumb; i++) {
+    const std::array<int, 2> indices = choose2(n, generator);
+    const arma::rowvec2 row_i = {X.at(indices[0]), X.at(indices[1])};
+    Xchoose2.row(i) = row_i;
+  }
+
+  double Jmean;
+  if(g == 0.0) {
+    const arma::vec Jvec = Xchoose2.col(0) % Xchoose2.col(1) %
+                           (Xchoose2.col(0) - Xchoose2.col(1)) / (2.0 * s * s);
+    Jmean = arma::mean(abs(Jvec));
+  } else {
+    const arma::mat A = g / s * Xchoose2;
+    const arma::vec Jvec =
+        (Xchoose2.col(0) % (1 + A.col(1)) % log1p(A.col(1)) -
+         Xchoose2.col(1) % (1 + A.col(0)) % log1p(A.col(0))) /
+        g / g;
+    Jmean = arma::mean(abs(Jvec));
   }
   return Jmean;
 }
@@ -185,13 +184,15 @@ const double log_gpd_densArma(const double g,
   const double Max = arma::max(X);
 
   if(s > 0 && g > (-s / Max)) {
-    const double J = JacobianArma(g, s, Jnumb, X, n, generator);
+    const double J = n < 250 ? 
+      JacobianArma1(g, s, X, n) : 
+      JacobianArma2(g, s, Jnumb, X, n, generator);
 
     if(g == 0.0) {
       log_density = -arma::accu(X) / s + log(J) - n * log(s);
     } else {
-      log_density = (-1 / g - 1) * arma::accu(log1p(g * X / s)) + log(J) -
-                    n * log(s);
+      log_density =
+          (-1 / g - 1) * arma::accu(log1p(g * X / s)) + log(J) - n * log(s);
     }
   } else {
     log_density = -INFINITY;

@@ -82,6 +82,12 @@ gfigpd2 <- function(
     i <- thresholdIndex(X, threshold.init)
   }
   
+  if(sum(X >= threshold.init) < 4L){
+    stop(
+      "The sample size is too small, or `threshold.init` is too high."
+    )
+  }
+  
   # Initialize the default values for the tuning parameters of the MCMC chain
   if(is.na(gamma.init) || is.na(sigma.init)) {
     mle.fit <- gpd.fit(X, X[i], show = FALSE)

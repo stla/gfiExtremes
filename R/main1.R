@@ -62,9 +62,15 @@ gfigpd1 <- function(
       "The value of `threshold` is larger than the maximum of `X`."
     )
   }
+
+  n <- sum(X >= threshold)
+  if(n < 3L){
+    stop(
+      "The sample size is too small, or the threshold is too high."
+    )
+  }
   
   # Initialize the default values for the tuning parameters of the MCMC chain
-  n <- sum(X >= threshold)
   if(is.na(gamma.init) || is.na(sigma.init)) {
     mle.fit <- gpd.fit(X, threshold, show = FALSE)
     if(is.na(gamma.init)) gamma.init <- mle.fit$mle[2L]
@@ -94,7 +100,7 @@ gfigpd1 <- function(
   if(nchains == 1L){
     chain <- thinChain(MCMCchainArma(
       X, beta, gamma.init, sigma.init, 
-      threshold, prob = mean(X > threshold), 
+      threshold, prob = mean(X >= threshold), 
       sd.gamma, sd.sigma, # to change
       number.iterations, Jnumb, seeds[1L]
     )[-(1L:burnin), ], skip.number)

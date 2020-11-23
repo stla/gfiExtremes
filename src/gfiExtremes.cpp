@@ -125,6 +125,7 @@ double JacobianArma2(const double g,
                      const arma::vec& X,
                      const int n,
                      std::default_random_engine& generator) {
+  
   arma::mat Xchoose2(Jnumb, 2);
   for(size_t i = 0; i < Jnumb; i++) {
     const std::array<int, 2> indices = choose2(n, generator);

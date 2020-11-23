@@ -69,7 +69,7 @@ distribution.
 We can get the shortest fiducial confidence intervals with the 'coda' function 
 `HPDinterval`:
 
-```{r hpf_gfigpd1}
+```{r hpd_gfigpd1}
 HPDinterval(joinMCMCchains(gf1))
 ```
 

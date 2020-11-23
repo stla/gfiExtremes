@@ -91,10 +91,9 @@ qgamma(c(0.98, 0.99), shape = 10, rate = 1)
 traceplot(gf[,"beta1"])
 traceplot(gf[,"beta2"])
 thresholdEstimate(gf)
-gfBetas <- gf[, c("beta1","beta2")]
-rejectionRate(gfBetas)
-HPDinterval(gfBetas)
-HPDinterval(joinMCMCchains(gfBetas))
+rejectionRate(gf)
+HPDinterval(gf)
+HPDinterval(joinMCMCchains(gf))
 }
 \references{
 Damian V. Wandler & Jan Hannig. 

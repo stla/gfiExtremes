@@ -21,14 +21,17 @@ knitr::opts_chunk$set(
 ```
 
 The 'gfiExtremes' package offers two main functions: `gfigpd1` and `gfigpd2`. 
-XXX
+Each of them generates simulations from the fiducial distribution of a model 
+involving the generalized Pareto distribution. The difference is that the 
+threshold $\mu$ of the generalized Pareto distribution is assumed to be known 
+by `gfigpd1`, whereas `gfigpd2` estimates this threshold. 
 
-- both model involving gpd
+The algorithms are implemented in C++. They are translated from the original R
+code written by the authors of the reference paper. 
 
 ```{r setup, message=TRUE}
 library(gfiExtremes)
 ```
-
 
 ## The model with a known threshold
 
@@ -96,5 +99,3 @@ qlnorm(c(0.99, 0.995, 0.999), meanlog = 1)
 ```
 
 As you can see, the inference on the quantiles is good.
-
-

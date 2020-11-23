@@ -7,7 +7,7 @@
 #' @param p numeric vector of probabilities
 #' @param n positive integer, the desired number of simulations
 #' @param mu location parameter
-#' @param gamma shape parameter, positive
+#' @param gamma shape parameter
 #' @param sigma scale parameter, strictly positive
 #' @param log logical, whether to return the log-density
 #' 
@@ -17,10 +17,10 @@
 #' @name GPareto
 #' @export
 dgpareto <- function(x, mu, gamma, sigma, log = FALSE){ 
-  stopifnot(gamma >= 0, sigma > 0)
+  stopifnot(sigma > 0)
   out <- if(log) log(numeric(length(x))) else numeric(length(x))
-  less_than_mu <- q < mu
-  in_support <- !less_than_mu
+  in_support <- x >= mu
+  if(gamma < 0) in_support <- in_support & (x <= mu - sigma/gamma)
   if(any(in_support)){
     x <- x[in_support]
     z <- (x - mu) / sigma
@@ -40,10 +40,12 @@ dgpareto <- function(x, mu, gamma, sigma, log = FALSE){
 #' @rdname GPareto
 #' @export
 pgpareto <- function(q, mu, gamma, sigma){ 
-  stopifnot(gamma >= 0, sigma > 0)
+  stopifnot(sigma > 0)
   out <- numeric(length(q))
   less_than_mu <- q < mu
-  in_support <- !less_than_mu
+  beyond <- if(gamma >= 0) logical(length(q)) else q > (mu - sigma/gamma)
+  out[beyond] <- 1
+  in_support <- !less_than_mu & !beyond
   if(any(in_support)){
     q <- q[in_support]
     z <- (q - mu) / sigma
@@ -66,7 +68,7 @@ rgpareto <- function(n, mu, gamma, sigma){
 #' @export
 qgpareto <- function(p, mu, gamma, sigma){
   stopifnot(all(p >= 0 & p <= 1))
-  stopifnot(gamma >= 0, sigma > 0)
+  stopifnot(sigma > 0)
   if(gamma == 0){
     mu - sigma * log1p(-p)
   }else{

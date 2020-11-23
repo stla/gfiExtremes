@@ -21,7 +21,7 @@ qgpareto(p, mu, gamma, sigma)
 
 \item{mu}{location parameter}
 
-\item{gamma}{shape parameter, positive}
+\item{gamma}{shape parameter}
 
 \item{sigma}{scale parameter, strictly positive}
 

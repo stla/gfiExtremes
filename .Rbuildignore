@@ -3,3 +3,4 @@
 ^inst/Rcode$
 ^doc$
 ^Meta$
+^cran-comments\.md$

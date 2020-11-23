@@ -16,7 +16,7 @@ gfigpd1(
   iter = 10000L,
   burnin = 2000L,
   thin = 6L,
-  nchains = nthreads,
+  nchains = 4L,
   nthreads = parallel::detectCores(),
   seeds = NULL
 )
@@ -66,8 +66,7 @@ Runs the MCMC sampler of the fiducial distribution for the
 set.seed(666L)
 X <- rgpareto(500L, mu = 10, gamma = 0.5, sigma = 1)
 gf <- gfigpd1(
-  X, beta = c(0.98, 0.99), threshold = 10, iter = 3000L,
-  nchains = 4L, nthreads = 2L
+  X, beta = c(0.98, 0.99), threshold = 10, iter = 3000L, nthreads = 2L
 )
 summary(gf)
 qgpareto(c(0.98, 0.99), mu = 10, gamma = 0.5, sigma = 1)

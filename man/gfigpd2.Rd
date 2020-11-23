@@ -20,7 +20,7 @@ gfigpd2(
   iter = 10000L,
   burnin = 2000L,
   thin = 6L,
-  nchains = nthreads,
+  nchains = 4L,
   nthreads = parallel::detectCores(),
   seeds = NULL,
   allParameters = FALSE
@@ -85,8 +85,7 @@ Runs the MCMC sampler of the fiducial distribution for the
 \examples{
 set.seed(31415L)
 X <- rgamma(350L, shape = 10, rate = 1)
-gf <- gfigpd2(X, beta = c(0.98, 0.99), iter = 3000L, 
-              nchains = 4L, nthreads = 2L)
+gf <- gfigpd2(X, beta = c(0.98, 0.99), iter = 3000L, nthreads = 2L)
 summary(gf)
 qgamma(c(0.98, 0.99), shape = 10, rate = 1)
 traceplot(gf[,"beta1"])

@@ -48,8 +48,7 @@
 #'
 #' @examples set.seed(31415L)
 #' X <- rgamma(350L, shape = 10, rate = 1)
-#' gf <- gfigpd2(X, beta = c(0.98, 0.99), iter = 3000L, 
-#'               nchains = 4L, nthreads = 2L)
+#' gf <- gfigpd2(X, beta = c(0.98, 0.99), iter = 3000L, nthreads = 2L)
 #' summary(gf)
 #' qgamma(c(0.98, 0.99), shape = 10, rate = 1)
 #' traceplot(gf[,"beta1"])
@@ -63,7 +62,7 @@ gfigpd2 <- function(
   gamma.init = NA, sigma.init = NA, sd.gamma = NA, sd.sigma = NA, 
   p1 = 0.9, p2 = 0.5, lambda1 = 2, lambda2 = 10, Jnumb = 50L, 
   iter = 10000L, burnin = 2000L, thin = 6L,
-  nchains = nthreads, nthreads = parallel::detectCores(), seeds = NULL, 
+  nchains = 4L, nthreads = parallel::detectCores(), seeds = NULL, 
   allParameters = FALSE) {
   
   stopifnot(thin >= 1L, nchains >= 1L, nthreads >= 1L)

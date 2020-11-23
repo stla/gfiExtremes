@@ -38,8 +38,7 @@
 #' @examples set.seed(666L)
 #' X <- rgpareto(500L, mu = 10, gamma = 0.5, sigma = 1)
 #' gf <- gfigpd1(
-#'   X, beta = c(0.98, 0.99), threshold = 10, iter = 3000L,
-#'   nchains = 4L, nthreads = 2L
+#'   X, beta = c(0.98, 0.99), threshold = 10, iter = 3000L, nthreads = 2L
 #' )
 #' summary(gf)
 #' qgpareto(c(0.98, 0.99), mu = 10, gamma = 0.5, sigma = 1)
@@ -51,7 +50,7 @@ gfigpd1 <- function(
   gamma.init = NA, sigma.init = NA, sd.gamma = NA, sd.sigma = NA, 
   Jnumb = 50L, 
   iter = 10000L, burnin = 2000L, thin = 6L,
-  nchains = nthreads, nthreads = parallel::detectCores(), seeds = NULL) {
+  nchains = 4L, nthreads = parallel::detectCores(), seeds = NULL) {
   
   stopifnot(thin >= 1L, nchains >= 1L, nthreads >= 1L)
   nthreads <- min(nthreads, nchains)

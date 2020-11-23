@@ -29,6 +29,14 @@ by `gfigpd1`, whereas `gfigpd2` estimates this threshold.
 The algorithms are implemented in C++. They are translated from the original R
 code written by the authors of the reference paper. 
 
+### Note 
+
+The package allows to run some MCMC chains in parallel. In the examples below, 
+as well as in the examples of the package documentation, I set `nthreads = 2L` 
+because of CRAN restrictions: CRAN does not allow more than two R processes in 
+parallel and then it would not accept the package if a higher number of threads 
+were set.
+
 ```{r setup, message=TRUE}
 library(gfiExtremes)
 ```
@@ -51,7 +59,10 @@ For example, assume that $X$ follows the $GP(\mu,\gamma,\sigma)$ distribution
 ```{r gfigpd1}
 set.seed(666L)
 X <- rgpareto(200L, mu = 10, gamma = 0.3, sigma = 2)
-gf1 <- gfigpd1(X, beta = c(0.99, 0.995, 0.999), threshold = 10, iter = 10000L)
+gf1 <- gfigpd1(
+  X, beta = c(0.99, 0.995, 0.999), threshold = 10, iter = 10000L,
+  nchains = 4L, nthreads = 2L
+)
 ```
 
 The output of `gfigpd1` is a R object ready for analysis with the 'coda' 
@@ -92,7 +103,10 @@ Let's assume for example that $X$ follows a log-normal distribution:
 ```{r gfigpd2}
 set.seed(666L)
 X <- rlnorm(400L, meanlog = 1)
-gf2 <- gfigpd2(X, beta = c(0.99, 0.995, 0.999), iter = 10000L, burnin = 10000L)
+gf2 <- gfigpd2(
+  X, beta = c(0.99, 0.995, 0.999), iter = 10000L, burnin = 10000L,
+  nchains = 4L, nthreads = 2L
+)
 summary(gf2)
 # compare with the true quantiles:
 qlnorm(c(0.99, 0.995, 0.999), meanlog = 1)

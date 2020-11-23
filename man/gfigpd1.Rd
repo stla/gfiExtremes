@@ -30,13 +30,13 @@ estimated}
 \item{threshold}{value of the known threshold, must be smaller than the
 maximum of \code{X}}
 
-\item{gamma.init}{starting value for gamma in the MCMC}
+\item{gamma.init}{starting value for \code{gamma} in the MCMC}
 
-\item{sigma.init}{starting value for sigma in the MCMC}
+\item{sigma.init}{starting value for \code{sigma} in the MCMC}
 
-\item{sd.gamma}{standard deviation for the proposed gamma}
+\item{sd.gamma}{standard deviation for the proposed \code{gamma} in the MCMC}
 
-\item{sd.sigma}{standard deviation for the proposed sigma}
+\item{sd.sigma}{standard deviation for the proposed \code{sigma} in the MCMC}
 
 \item{Jnumb}{number of subsamples that are taken from the Jacobian}
 

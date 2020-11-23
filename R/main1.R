@@ -7,10 +7,10 @@
 #'   estimated
 #' @param threshold value of the known threshold, must be smaller than the
 #'   maximum of \code{X}
-#' @param gamma.init starting value for gamma in the MCMC
-#' @param sigma.init starting value for sigma in the MCMC
-#' @param sd.gamma standard deviation for the proposed gamma
-#' @param sd.sigma standard deviation for the proposed sigma
+#' @param gamma.init starting value for \code{gamma} in the MCMC
+#' @param sigma.init starting value for \code{sigma} in the MCMC
+#' @param sd.gamma standard deviation for the proposed \code{gamma} in the MCMC
+#' @param sd.sigma standard deviation for the proposed \code{sigma} in the MCMC
 #' @param Jnumb number of subsamples that are taken from the Jacobian
 #' @param iter number of iterations per chain (burnin excluded)
 #' @param burnin number of the first MCMC iterations discarded

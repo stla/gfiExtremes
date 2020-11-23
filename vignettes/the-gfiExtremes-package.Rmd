@@ -20,7 +20,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup, message=FALSE}
+The 'gfiExtremes' package offers two main functions: `gfigpd1` and `gfigpd2`. 
+XXX
+
+- both model involving gpd
+
+```{r setup, message=TRUE}
 library(gfiExtremes)
 ```
 
@@ -92,9 +97,4 @@ qlnorm(c(0.99, 0.995, 0.999), meanlog = 1)
 
 As you can see, the inference on the quantiles is good.
 
-## A real dataset
-
-```{r rain}
-data("rain", package = "ismev")
-```
 

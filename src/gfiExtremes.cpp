@@ -115,6 +115,8 @@ double JacobianArma(const double g,
     }
   }
 
+  // si n < 250 sortir les objets de la boucle! (2 fonctions selon n<250)
+  
   double Jmean;
   if(g == 0.0) {
     if(n >= 250) {

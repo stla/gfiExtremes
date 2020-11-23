@@ -35,13 +35,13 @@ estimated}
 \item{threshold.init}{a guess of the unknown threshold, must be in the range 
 of \code{X}}
 
-\item{gamma.init}{starting value for gamma in the MCMC}
+\item{gamma.init}{starting value for \code{gamma} in the MCMC}
 
-\item{sigma.init}{starting value for sigma in the MCMC}
+\item{sigma.init}{starting value for \code{sigma} in the MCMC}
 
-\item{sd.gamma}{standard deviation for the proposed gamma}
+\item{sd.gamma}{standard deviation for the proposed \code{gamma} in the MCMC}
 
-\item{sd.sigma}{standard deviation for the proposed sigma}
+\item{sd.sigma}{standard deviation for the proposed \code{sigma} in the MCMC}
 
 \item{p1}{probability that the MCMC will propose a new \code{(gamma,sigma)}; 
 \code{(1-p1)} would be the probability that the MCMC chain will propose a 

@@ -7,10 +7,10 @@
 #'   estimated
 #' @param threshold.init a guess of the unknown threshold, must be in the range 
 #'   of \code{X}
-#' @param gamma.init starting value for gamma in the MCMC
-#' @param sigma.init starting value for sigma in the MCMC
-#' @param sd.gamma standard deviation for the proposed gamma
-#' @param sd.sigma standard deviation for the proposed sigma
+#' @param gamma.init starting value for \code{gamma} in the MCMC
+#' @param sigma.init starting value for \code{sigma} in the MCMC
+#' @param sd.gamma standard deviation for the proposed \code{gamma} in the MCMC
+#' @param sd.sigma standard deviation for the proposed \code{sigma} in the MCMC
 #' @param p1 probability that the MCMC will propose a new \code{(gamma,sigma)}; 
 #'   \code{(1-p1)} would be the probability that the MCMC chain will propose a 
 #'   new index for a new threshold
@@ -44,6 +44,7 @@
 #' @importFrom doParallel registerDoParallel
 #' @importFrom parallel makeCluster stopCluster
 #' @importFrom foreach foreach `%dopar%`
+#' @importFrom stats median
 #'
 #' @examples set.seed(31415L)
 #' X <- rgamma(350L, shape = 10, rate = 1)

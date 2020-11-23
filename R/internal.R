@@ -1,5 +1,6 @@
 #' @useDynLib gfiExtremes
 #' @importFrom Rcpp evalCpp
+#' @import coda
 NULL
 
 rGPDmodel <- function(nsims, mu = 10, gamma = 1, sigma = 1){

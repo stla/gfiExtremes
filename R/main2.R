@@ -68,6 +68,8 @@ gfigpd2 <- function(
   stopifnot(thin >= 1L, nchains >= 1L, nthreads >= 1L)
   nthreads <- min(nthreads, nchains)
   
+  X <- na.omit(X)
+  
   n <- length(X)
   if(n < 11L){
     stop(
@@ -97,9 +99,9 @@ gfigpd2 <- function(
   
   # Initialize the default values for the tuning parameters of the MCMC chain
   if(is.na(gamma.init) || is.na(sigma.init)) {
-    mle.fit <- gpd.fit(X, X[i], show = FALSE)
-    if(is.na(gamma.init)) gamma.init <- mle.fit$mle[2L]
-    if(is.na(sigma.init)) sigma.init <- mle.fit$mle[1L]
+    fit <- gpdFit(X, threshold.init)
+    if(is.na(gamma.init)) gamma.init <- fit[1L]
+    if(is.na(sigma.init)) sigma.init <- fit[2L]
   }
   if(is.na(sd.gamma)) sd.gamma <- 2 * abs(gamma.init) / 3
   if(is.na(sd.sigma)) sd.sigma <- 2 * sigma.init / 3

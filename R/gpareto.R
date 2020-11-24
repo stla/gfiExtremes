@@ -28,9 +28,9 @@ dgpareto <- function(x, mu, gamma, sigma, log = FALSE){
       if(log) -z - log(sigma) else exp(-z)/sigma
     }else{
       if(log){
-        (-1/gamma-1) * log1p(gamma*z) - log(sigma)
+        (-1/gamma-1) * log1p(gamma*z) - log(sigma) 
       }else{
-        (1 + gamma*z)^(-1/gamma-1) / sigma
+        (1 + gamma*z)^(-1/gamma-1) / sigma 
       }
     }
   }

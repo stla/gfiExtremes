@@ -26,6 +26,39 @@ thresholdIndex <- function(Xs, a){
   match(TRUE, Xs - a >= 0)
 }
 
+#' @importFrom stats optim
+#' @importFrom POT fitgpd
+#' @noRd
+gpdFit <- function(X, mu){
+  fn <- function(gamma_sigma){
+    gamma <- gamma_sigma[1L]
+    sigma <- gamma_sigma[2L]
+    if(sigma <= 0) return(10^6)
+    if(gamma < 0 && any(X[X >= mu] >= mu - sigma/gamma)){
+      return(10^6)
+    }
+    - sum(dgpareto(
+      x = X[X >= mu],
+      mu = mu,
+      gamma = gamma,
+      sigma = sigma,
+      log = TRUE
+    )) 
+  }
+  inits <- fitgpd(X, mu, est="moments")$fitted.values[c("shape","scale")]
+  opt <- optim(
+    par = inits,
+    fn = fn,
+    method = "Nelder-Mead", 
+    control = list(maxit = 10000L)
+  )
+  if(opt[["convergence"]] == 0L){
+    opt[["par"]]
+  }else{
+    inits
+  }
+}
+
 # # @importFrom stats optim
 # # @noRd
 # selectThreshold <- function(X, candidates){

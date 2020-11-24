@@ -40,11 +40,10 @@
 #'   <doi:10.1007/s10687-011-0127-9>
 #' 
 #' @export
-#' @importFrom ismev gpd.fit
 #' @importFrom doParallel registerDoParallel
 #' @importFrom parallel makeCluster stopCluster
 #' @importFrom foreach foreach `%dopar%`
-#' @importFrom stats median
+#' @importFrom stats median na.omit
 #'
 #' @examples set.seed(31415L)
 #' X <- rgamma(350L, shape = 10, rate = 1)

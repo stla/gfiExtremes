@@ -30,7 +30,7 @@
 #'   <doi:10.1007/s10687-011-0127-9>
 #' 
 #' @export
-#' @importFrom ismev gpd.fit
+#' @importFrom stats na.omit
 #' @importFrom doParallel registerDoParallel
 #' @importFrom parallel makeCluster stopCluster
 #' @importFrom foreach foreach `%dopar%`
@@ -55,7 +55,7 @@ gfigpd1 <- function(
   stopifnot(thin >= 1L, nchains >= 1L, nthreads >= 1L)
   nthreads <- min(nthreads, nchains)
   
-  X <- sort(X) # -->> so there's no need to sort in C++
+  X <- sort(na.omit(X)) # -->> so there's no need to sort in C++
   
   if(threshold >= X[length(X)]){
     stop(
@@ -72,9 +72,9 @@ gfigpd1 <- function(
   
   # Initialize the default values for the tuning parameters of the MCMC chain
   if(is.na(gamma.init) || is.na(sigma.init)) {
-    mle.fit <- gpd.fit(X, threshold, show = FALSE)
-    if(is.na(gamma.init)) gamma.init <- mle.fit$mle[2L]
-    if(is.na(sigma.init)) sigma.init <- mle.fit$mle[1L]
+    fit <- gpdFit(X, threshold.init)
+    if(is.na(gamma.init)) gamma.init <- fit[1L]
+    if(is.na(sigma.init)) sigma.init <- fit[2L]
   }
   if(is.na(sd.gamma)) sd.gamma <- 0.3 / log(n, 20)
   if(is.na(sd.sigma)) sd.sigma <- sigma.init * 0.3 / log(n, 20)

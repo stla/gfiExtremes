@@ -72,7 +72,7 @@ gfigpd1 <- function(
   
   # Initialize the default values for the tuning parameters of the MCMC chain
   if(is.na(gamma.init) || is.na(sigma.init)) {
-    fit <- gpdFit(X, threshold.init)
+    fit <- gpdFit(X, threshold)
     if(is.na(gamma.init)) gamma.init <- fit[1L]
     if(is.na(sigma.init)) sigma.init <- fit[2L]
   }

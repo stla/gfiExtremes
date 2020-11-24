@@ -1,8 +1,8 @@
 # gfiExtremes
 
-Fiducial framework to perform inference on the parameters and the extreme 
-quantiles of the generalized Pareto distribution, assuming the threshold is a 
-known or unknown parameter.
+Fiducial framework to perform inference on the quantiles for a generalized 
+Pareto distribution model and on the parameters of the Pareto exceedance 
+distribution, assuming the exceedance threshold is a known or unknown parameter.
 
 ### Reference
 

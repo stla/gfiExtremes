@@ -25,3 +25,33 @@ thresholdIndex <- function(Xs, a){
   # Xs is X sorted
   match(TRUE, Xs - a >= 0)
 }
+
+#' @importFrom stats optim
+#' @noRd
+selectThreshold <- function(X, candidates){
+  params <- matrix(NA_real_, nrow = length(candidates), ncol = 2L)
+  values <- rep(NA_real_, length(candidates))
+  for(i in seq_along(candidates)){
+    mu <- candidates[i]
+    fn <- function(gamma_sigma){
+      - sum(dgpareto(
+        x = X[X >= mu], 
+        mu = mu, 
+        gamma = gamma_sigma[1L]/(1-gamma_sigma[1L]), 
+        sigma = gamma_sigma[2L]/(1-gamma_sigma[2L]), 
+        log = TRUE
+      ))
+    }
+    opt <- optim(
+      par = c(0.5, 0.5), fn = fn, 
+      method = "L-BFGS-B", lower = 0.01, upper = 0.99, 
+      control = list(maxit = 500L)
+    )
+    if(opt[["convergence"]] == 0L){
+      params[i, ] <- opt[["par"]]/(1-opt[["par"]])
+      values[i, ] <- opt[["value"]]
+    }
+  }
+  imin <- which.min(values)
+  c(mu = candidates[imin], gamma = params[imin, 1L], sigma = params[imin, 2L])
+}

@@ -54,7 +54,7 @@ Fiducial.GPD.unknown.thresh <- function(
   chain <- chain.output[, 1:3]
   acceptance.rate <- mean(chain.output[, 4])
   cat("acceptance rate: ", acceptance.rate)
-  stop()
+  #stop()
   # estimated threshold
   median.index <- median(chain.output[, 3])
   
@@ -186,8 +186,11 @@ MCMC.newpoint <- function(g, s, i, p1, p2, lambda, sd.g, sd.s, X, J.numb, n) {
   if (runif(1) > p1) {
     Bern <- sample(c(-1, 1), 1, prob = c(1 - p2, p2))
     
+    print(Bern)
     if (Bern == 1) {
       plus.minus <- n
+      print(n)
+      print(n-i-10)
       while (plus.minus > (n - i - 10)) {
         plus.minus <- rpois(1, lambda)
       }
@@ -313,14 +316,20 @@ CI.short.fast <- function(chain, confidence.level) {
 }
 
 
-data(rain)
-set.seed(666)
-X <- rgamma(10000, shape = 4, scale = 1)  #rain#rgamma(1000, 1, 1)
-
+set.seed((666))
+X <- exp(rcauchy(50))
 xt <- Fiducial.GPD.unknown.thresh(
-  X, c(0.25,0.5,0.75), 0.95, chain.length = 10000, burnin = 2000
+  X, c(0.25,0.5,0.75), 0.95, chain.length = 100, burnin = 200
 )
 
-coda <- as.mcmc(xt)
-summary(coda)
-qgamma(c(0.25,0.5,0.75),4)
+# data(rain)
+# set.seed(666)
+# X <- rgamma(10000, shape = 4, scale = 1)  #rain#rgamma(1000, 1, 1)
+# 
+# xt <- Fiducial.GPD.unknown.thresh(
+#   X, c(0.25,0.5,0.75), 0.95, chain.length = 10000, burnin = 2000
+# )
+# 
+# coda <- as.mcmc(xt)
+# summary(coda)
+# qgamma(c(0.25,0.5,0.75),4)

@@ -68,13 +68,20 @@ gfigpd2 <- function(
   stopifnot(thin >= 1L, nchains >= 1L, nthreads >= 1L)
   nthreads <- min(nthreads, nchains)
   
+  n <- length(X)
+  if(n < 11L){
+    stop(
+      "The sample size is too small (must be at least 11)."
+    )
+  }
+  
   X <- sort(X) # -->> so there's no need to sort in C++
 
   if(is.na(threshold.init)){
-    i <- floor(0.85 * length(X))
+    i <- ifelse(n >= 61L, floor(0.85 * n), n - 10L)
     threshold.init <- X[i]
   }else{
-    if(threshold.init <= X[1L] || threshold.init >= X[length(X)]){
+    if(threshold.init <= X[1L] || threshold.init >= X[n]){
       stop(
         "The value of `threshold.init` is not in the range of `X`."
       )

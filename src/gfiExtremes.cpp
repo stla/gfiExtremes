@@ -51,12 +51,12 @@ Rcpp::NumericVector BetaQuantile(const double g,
   return Q;
 }
 
-arma::rowvec BetaQuantileArma(const double g,
+arma::colvec BetaQuantileArma(const double g,
                               const double s,
                               const double a,
                               const double prob,
-                              const arma::rowvec& beta) {
-  arma::rowvec Q;
+                              const arma::colvec& beta) {
+  arma::colvec Q;
   if(g == 0.0) {
     Q = a - s * log((1.0 - beta) / prob);
   } else {
@@ -126,23 +126,24 @@ double JacobianArma2(const double g,
                      const int n,
                      std::default_random_engine& generator) {
   
-  arma::mat Xchoose2(Jnumb, 2);
+  arma::mat Xchoose2(2, Jnumb);
   for(size_t i = 0; i < Jnumb; i++) {
     const std::array<int, 2> indices = choose2(n, generator);
-    const arma::rowvec2 row_i = {X.at(indices[0]), X.at(indices[1])};
-    Xchoose2.row(i) = row_i;
+    const arma::colvec2 col_i = {X.at(indices[0]), X.at(indices[1])};
+    Xchoose2.col(i) = col_i;
   }
-
+  arma::mat Xchoose2t = Xchoose2.t();
+  
   double Jmean;
   if(g == 0.0) {
-    const arma::vec Jvec = Xchoose2.col(0) % Xchoose2.col(1) %
-                           (Xchoose2.col(0) - Xchoose2.col(1)) / (2.0 * s * s);
+    const arma::vec Jvec = Xchoose2t.col(0) % Xchoose2t.col(1) %
+                           (Xchoose2t.col(0) - Xchoose2t.col(1)) / (2.0 * s * s);
     Jmean = arma::mean(abs(Jvec));
   } else {
-    const arma::mat A = g / s * Xchoose2;
+    const arma::mat A = g / s * Xchoose2t;
     const arma::vec Jvec =
-        (Xchoose2.col(0) % (1 + A.col(1)) % log1p(A.col(1)) -
-         Xchoose2.col(1) % (1 + A.col(0)) % log1p(A.col(0))) /
+        (Xchoose2t.col(0) % (1 + A.col(1)) % log1p(A.col(1)) -
+         Xchoose2t.col(1) % (1 + A.col(0)) % log1p(A.col(0))) /
         g / g;
     Jmean = arma::mean(abs(Jvec));
   }
@@ -274,7 +275,7 @@ std::array<double, 3> MCMCnewpoint(const double g,
   return newpoint;
 }
 
-arma::rowvec2 MCMCnewpointArma(const double g,
+arma::colvec2 MCMCnewpointArma(const double g,
                                const double s,
                                const double sd_g,
                                const double sd_s,
@@ -288,7 +289,7 @@ arma::rowvec2 MCMCnewpointArma(const double g,
   const double MHratio = exp(
       log_gpd_densArma(g_star, s_star, X, n, Jnumb, generator, UpperTriOnes) -
       log_gpd_densArma(g, s, X, n, Jnumb, generator, UpperTriOnes));
-  arma::rowvec2 newpoint;
+  arma::colvec2 newpoint;
   if(!std::isnan(MHratio) && !std::isinf(MHratio) &&
      uniform(generator) < MHratio) {
     newpoint = {g_star, s_star};
@@ -384,7 +385,7 @@ Rcpp::NumericMatrix MCMCchain(Rcpp::NumericVector X,
 
 // [[Rcpp::export]]
 arma::mat MCMCchainArma(const arma::vec& Xfull,
-                        const arma::rowvec& beta,
+                        const arma::colvec& beta,
                         const double g,
                         const double s,
                         const double a,
@@ -395,19 +396,19 @@ arma::mat MCMCchainArma(const arma::vec& Xfull,
                         const size_t Jnumb,
                         const unsigned seed) {
   std::default_random_engine generator(seed);
-  arma::mat xt(niter, 2 + beta.size());
-  arma::rowvec2 gs = {g, s};
-  xt.row(0) = arma::join_rows(gs, BetaQuantileArma(g, s, a, prob, beta));
+  arma::mat xt(2 + beta.size(), niter);
+  arma::colvec2 gs = {g, s};
+  xt.col(0) = arma::join_cols(gs, BetaQuantileArma(g, s, a, prob, beta));
   const arma::vec X = Xfull.elem(arma::find(Xfull > a)) - a;
   const int n = X.size();
   const arma::mat UpperTriOnes = arma::trimatu(arma::ones(n, n));
   for(size_t j = 0; j < niter - 1; j++) {
-    arma::rowvec2 newpoint =
+    arma::colvec2 newpoint =
         MCMCnewpointArma(xt.at(j, 0), xt.at(j, 1), sd_g, sd_s, X, n, Jnumb,
                          generator, UpperTriOnes);
-    xt.row(j + 1) = arma::join_rows(
+    xt.col(j + 1) = arma::join_cols(
         newpoint,
         BetaQuantileArma(newpoint.at(0), newpoint.at(1), a, prob, beta));
   }
-  return xt;
+  return xt.t();
 }

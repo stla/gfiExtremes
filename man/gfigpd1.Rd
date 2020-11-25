@@ -67,8 +67,8 @@ set.seed(666L)
 X <- rgpareto(200L, mu = 10, gamma = 0.5, sigma = 1)
 gf <- gfigpd1(
   X, beta = c(0.98, 0.99), threshold = 10, 
-  iter = 1500L, nchains = 2L, nthreads = 2L
-) # note: 2*1500 iterations is not enough, I'm using these settings because 
+  iter = 2000L, nchains = 2L, nthreads = 2L
+) # note: 2*2000 iterations is not enough, I'm using these settings because 
   # of CRAN constraints (elapsed time must be < 5s)
 summary(gf)
 qgpareto(c(0.98, 0.99), mu = 10, gamma = 0.5, sigma = 1)

@@ -50,7 +50,7 @@ event $X < \mu$, no distributional assumption is made.
 
 Then the algorithm performed by the `gfigpd1` function produces some simulations
 of the fiducial distributions of $\gamma$, $\sigma$ and of the 
-$(100\beta\%)$-quantiles of $X$ at the requested values of $\beta$. These are 
+$100\beta\%$-quantiles of $X$ at the requested values of $\beta$. These are 
 MCMC chains.
 
 For example, assume that $X$ follows the $GP(\mu,\gamma,\sigma)$ distribution 
@@ -93,10 +93,11 @@ Pareto distribution $GP(\mu,\gamma,\sigma)$ conditionally to $X \geqslant \mu$,
 but there are additional assumptions. 
 
 These additional assumptions have no meaningful interpretation but this is not 
-important in order to estimate the quantiles of $X$: the parameters $\gamma$ 
-and $\sigma$ cannot be estimated (unless $X$ strictly follows the unrealistic 
-assumptions of the model) but $\mu$ can be estimated and the fiducial 
-distributions of the quantiles are available.
+important in order to estimate the quantiles of $X$: it is possible that the
+parameters $\gamma$ and $\sigma$ cannot be estimated (it is always possible if 
+$X$ strictly follows the unrealistic assumptions of the model) but $\mu$ can 
+always be estimated and the fiducial distributions of the quantiles are 
+available.
 
 Let's assume for example that $X$ follows a log-normal distribution:
 

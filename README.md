@@ -8,4 +8,4 @@ distribution, assuming the exceedance threshold is a known or unknown parameter.
 
 Damian V. Wandler & Jan Hannig. 
 [Generalized fiducial confidence intervals for extremes](https://hannig.cloudapps.unc.edu/publications/WandlerHannig2012a.pdf).
-Extremes (2012) 15, pp 67–87.
+Extremes 15 (2012), pp 67–87.

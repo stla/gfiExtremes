@@ -26,8 +26,7 @@ thresholdIndex <- function(Xs, a){
   match(TRUE, Xs - a >= 0)
 }
 
-#' @importFrom stats optim
-#' @importFrom POT fitgpd
+#' @importFrom stats optim var
 #' @noRd
 gpdFit <- function(X, mu){
   fn <- function(gamma_sigma){
@@ -45,7 +44,14 @@ gpdFit <- function(X, mu){
       log = TRUE
     )) 
   }
-  inits <- fitgpd(X, mu, est="moments")$fitted.values[c("shape","scale")]
+  # estimates by method of moments
+  exces <- X[X >= mu] - mu
+  m <- mean(exces)
+  v <- var(exces)
+  scale <- m/2 * (m^2/v + 1)
+  shape <- -(m^2/v - 1) / 2
+  #
+  inits <- c(shape, scale)
   opt <- optim(
     par = inits,
     fn = fn,

@@ -385,7 +385,7 @@ Rcpp::NumericMatrix MCMCchain(Rcpp::NumericVector X,
 
 // [[Rcpp::export]]
 arma::mat MCMCchainArma(const arma::vec& Xfull,
-                        const arma::colvec& beta,
+                        const arma::vec& beta,
                         const double g,
                         const double s,
                         const double a,
@@ -404,7 +404,7 @@ arma::mat MCMCchainArma(const arma::vec& Xfull,
   const arma::mat UpperTriOnes = arma::trimatu(arma::ones(n, n));
   for(size_t j = 0; j < niter - 1; j++) {
     arma::colvec2 newpoint =
-        MCMCnewpointArma(xt.at(j, 0), xt.at(j, 1), sd_g, sd_s, X, n, Jnumb,
+        MCMCnewpointArma(xt.at(0, j), xt.at(1, j), sd_g, sd_s, X, n, Jnumb,
                          generator, UpperTriOnes);
     xt.col(j + 1) = arma::join_cols(
         newpoint,

@@ -33,13 +33,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // MCMCchainArma
-arma::mat MCMCchainArma(const arma::vec& Xfull, const arma::colvec& beta, const double g, const double s, const double a, const double prob, const double sd_g, const double sd_s, const size_t niter, const size_t Jnumb, const unsigned seed);
+arma::mat MCMCchainArma(const arma::vec& Xfull, const arma::vec& beta, const double g, const double s, const double a, const double prob, const double sd_g, const double sd_s, const size_t niter, const size_t Jnumb, const unsigned seed);
 RcppExport SEXP _gfiExtremes_MCMCchainArma(SEXP XfullSEXP, SEXP betaSEXP, SEXP gSEXP, SEXP sSEXP, SEXP aSEXP, SEXP probSEXP, SEXP sd_gSEXP, SEXP sd_sSEXP, SEXP niterSEXP, SEXP JnumbSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const arma::vec& >::type Xfull(XfullSEXP);
-    Rcpp::traits::input_parameter< const arma::colvec& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type beta(betaSEXP);
     Rcpp::traits::input_parameter< const double >::type g(gSEXP);
     Rcpp::traits::input_parameter< const double >::type s(sSEXP);
     Rcpp::traits::input_parameter< const double >::type a(aSEXP);

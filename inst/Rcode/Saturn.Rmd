@@ -72,3 +72,62 @@ confidence intervals:
 qweibull(c(99, 99.5, 99.9)/100, shape = 1.5)
 ```
 
+## Convergence diagnostics
+
+Now one has to check that the MCMC chains have entered in their stationary 
+phase. It is better to take the logarithm of the simulations of the fiducial 
+distributions of the quantiles:
+
+```{r logChains}
+logChains <- as.mcmc.list(lapply(chains, log))
+```
+
+The `ggmcmc` package is helpful here. Firstly, let's have a look at the traces:
+
+```{r traceplot}
+library(ggmcmc)
+gglogChains <- ggs(logChains)
+ggs_traceplot(gglogChains)
+```
+
+Visually, nothing indicates a departure from the convergence. Let's look at the 
+estimated densities now:
+
+```{r densities}
+ggs_density(gglogChains)
+```
+
+The running means quickly stabilize:
+
+```{r runningMeans}
+ggs_running(gglogChains)
+```
+
+Below are the densities of the whole chains compared with the densities of their 
+last part:
+
+```{r comparePartial}
+ggs_compare_partial(gglogChains)
+```
+
+The autocorrelations nicely decrease:
+
+```{r autocorrelations}
+ggs_autocorrelation(gglogChains)
+```
+
+Let's also have a look at the Gelman-Rubin diagnostic:
+
+```{r gelmanRubin}
+gelman.diag(logChains)
+```
+
+The upper `Rhat` are close to 1, thereby indicating a successful diagnostic.
+
+Finally, let's look at the Heidelberger & Welch diagnostic:
+
+```{r heidelWelch}
+heidel.diag(logChains)
+```
+
+All tests passed.

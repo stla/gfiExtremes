@@ -1,0 +1,74 @@
+---
+title: "Untitled"
+author: "Stéphane Laurent"
+date: "27/11/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  message = FALSE,
+  collapse = TRUE,
+  fig.width = 6, fig.height = 5
+)
+```
+
+My new package 'gfiExtremes' is on CRAN now. So it is time to present it.
+
+This package allows to get confidence intervals about the quantiles of any 
+reasonable distribution (although the inference is based on a parametric model).
+The statistical inference is fiducial.
+
+To give an illustration, I'm taking a sample of length 100 randomly generated 
+from a Weibull distribution:
+
+```{r weibullSample}
+set.seed(1111111111L)
+X <- rweibull(100L, shape = 1.5)
+plot(X, pch = 19, main = "Data")
+```
+
+The model used for the fiducial inference assumes a generalized Pareto 
+distribution above a certain threshold. For an unknown value of this threshold, 
+the function to use is `gfigpd2`. It runs a MCMC sampler, and one has to 
+specify the length of the burnin phase, the desired length of the MCMC chains 
+after the burnin, and the thin value (e.g. a thin of 2 means that one sampled 
+value over two is dropped). One also has to specify the desired probability 
+levels of the quantiles we are interested in.
+
+```{r gfigpd2, cache=TRUE}
+library(gfiExtremes)
+chains <- gfigpd2(
+  X,                                         # data
+  beta = c(99, 99.5, 99.9)/100,              # probability levels
+  burnin = 20000L, iter = 20000L, thin = 10L # MCMC chains
+)
+```
+
+By default, `gfigpd2` runs four MCMC chains and they are generated in parallel.
+
+The output of `gfigpd2` is a R object ready for analysis with the 'coda' 
+package, which is loaded by 'gfiExtremes'. In particular, it has a `summary` 
+method:
+
+```{r summary}
+summary(chains)
+```
+
+The 'coda' package provides the `HPDinterval` function which gives the shortest 
+confidence intervals:
+
+```{r HPDintervals}
+HPDinterval(joinMCMCchains(chains))
+```
+
+Below are the true values of the Weibull quantiles; they are caught by the 
+confidence intervals:
+
+```{r quantiles}
+qweibull(c(99, 99.5, 99.9)/100, shape = 1.5)
+```
+

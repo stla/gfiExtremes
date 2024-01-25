@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // MCMCchain
 Rcpp::NumericMatrix MCMCchain(Rcpp::NumericVector X, const Rcpp::NumericVector beta, const double g, const double s, const double a, const int i, const double p1, const double p2, const double lambda1, const double lambda2, const double sd_g, const double sd_s, const size_t niter, const size_t nburnin, const size_t Jnumb, const unsigned seed);
 RcppExport SEXP _gfiExtremes_MCMCchain(SEXP XSEXP, SEXP betaSEXP, SEXP gSEXP, SEXP sSEXP, SEXP aSEXP, SEXP iSEXP, SEXP p1SEXP, SEXP p2SEXP, SEXP lambda1SEXP, SEXP lambda2SEXP, SEXP sd_gSEXP, SEXP sd_sSEXP, SEXP niterSEXP, SEXP nburninSEXP, SEXP JnumbSEXP, SEXP seedSEXP) {
